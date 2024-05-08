@@ -3,8 +3,10 @@ package br.com.JonasSMendes.screenmatch.principal;
 import br.com.JonasSMendes.screenmatch.model.DadosSerie;
 import br.com.JonasSMendes.screenmatch.model.DadosTemporada;
 import br.com.JonasSMendes.screenmatch.model.Serie;
+import br.com.JonasSMendes.screenmatch.repository.SerieRepository;
 import br.com.JonasSMendes.screenmatch.service.ConsumoApi;
 import br.com.JonasSMendes.screenmatch.service.ConverteDados;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 import java.util.*;
@@ -17,6 +19,12 @@ public class Principal {
     private final String ENDERECO = "https://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=5774020";
     private List<DadosSerie> dadosSeries = new ArrayList<>();
+
+    private final SerieRepository serieRepository;
+    public Principal(SerieRepository serieRepository) {
+        this.serieRepository = serieRepository;
+    }
+
 
     public void exibeMenu(){
         var opcoes = -1;
@@ -52,15 +60,13 @@ public class Principal {
                 default:
                     System.out.println("opção invalida");
             }
-
         }
-
-
     }
 
     private void buscarSerieWeb(){
         DadosSerie dados = getDadosSerie();
-        dadosSeries.add(dados);
+        Serie serie = new Serie(dados);
+        serieRepository.save(serie);
         System.out.println(dados);
     }
 
@@ -89,11 +95,8 @@ public class Principal {
 
     private void buscarSerieListadas(){
 
-        List<Serie> series = new ArrayList<>();
-        series = dadosSeries.stream()
-                        .map(d -> new Serie(d))
-                                .collect(Collectors.toList());
-       series.stream()
+        List<Serie> series = serieRepository.findAll();
+        series.stream()
                .sorted(Comparator.comparing(Serie::getGenero))
                .forEach(System.out::println);
     }
