@@ -1,6 +1,7 @@
 package br.com.JonasSMendes.screenmatch;
 
 import br.com.JonasSMendes.screenmatch.principal.Principal;
+import br.com.JonasSMendes.screenmatch.repository.EpisodiosRepository;
 import br.com.JonasSMendes.screenmatch.repository.SerieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,13 +14,16 @@ public class ScreenmatchApplication implements CommandLineRunner {
 	@Autowired
 	private SerieRepository serieRepository;
 
+	@Autowired
+	private EpisodiosRepository episodiosRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(ScreenmatchApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-        Principal principal = new Principal(serieRepository);
+        Principal principal = new Principal(serieRepository, episodiosRepository);
         principal.exibeMenu();
 	}
 
