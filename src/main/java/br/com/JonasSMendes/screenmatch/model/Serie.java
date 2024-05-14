@@ -32,7 +32,7 @@ public class Serie {
         this.titulo = dadosSerie.titulo();
         this.totalTemporadas = dadosSerie.totalTemporadas();
         this.avaliacao = OptionalDouble.of(Double.valueOf(dadosSerie.avaliacao())).orElse(0);
-        this.genero = Categoria.fromPortugues(dadosSerie.genero().split(",")[0].trim());
+        this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
         this.img = dadosSerie.img();
         this.sinopse = dadosSerie.sinopse();
         this.atores = dadosSerie.atores();
