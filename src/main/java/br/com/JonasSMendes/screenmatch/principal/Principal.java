@@ -1,13 +1,11 @@
 package br.com.JonasSMendes.screenmatch.principal;
 
 import br.com.JonasSMendes.screenmatch.model.*;
-import br.com.JonasSMendes.screenmatch.repository.EpisodiosRepository;
 import br.com.JonasSMendes.screenmatch.repository.SerieRepository;
 import br.com.JonasSMendes.screenmatch.service.ConsumoApi;
 import br.com.JonasSMendes.screenmatch.service.ConverteDados;
 
 
-import javax.sound.midi.Soundbank;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,13 +20,13 @@ public class Principal {
     private List<Serie> series = new ArrayList<>();
 
     private final SerieRepository serieRepository;
-    private final EpisodiosRepository episodiosRepository;
+
 
     private Optional<Serie> buscarSerie;
 
-    public Principal(SerieRepository serieRepository, EpisodiosRepository episodiosRepository) {
+    public Principal(SerieRepository serieRepository) {
         this.serieRepository = serieRepository;
-        this.episodiosRepository = episodiosRepository;
+
     }
 
 
@@ -49,6 +47,7 @@ public class Principal {
                     8 - Buscar total de temporadas com avaliação
                     9 - Buscar episodio trecho
                    10 - Buscar Top 5 episodios de uma serie
+                   11 - Buscar episodio por ano de lançamento
                     
                     0 - sair
                 """;
@@ -89,6 +88,9 @@ public class Principal {
                 case 10:
                     buscarTop5Episodios();
                     break;
+                case 11:
+                    buscarEpisodioPorData();
+                    break;
                 case 0:
                     System.out.println("saindo...");
                     break;
@@ -97,9 +99,6 @@ public class Principal {
             }
         }
     }
-
-
-
 
     private void buscarSerieWeb(){
         DadosSerie dados = getDadosSerie();
@@ -260,6 +259,21 @@ public class Principal {
             System.out.println("serie não encontrada");
         }
 
+    }
+
+    private void buscarEpisodioPorData(){
+        buscarSeriePorTitulo();
+
+        if (buscarSerie.isPresent()){
+            System.out.println("Qual o ano Limite de busca?");
+            var anoDeBusca = leitura.nextInt();
+
+            List<Episodio> buscaPorData = serieRepository.dataLancamentoEpisodio(buscarSerie.get(), anoDeBusca);
+
+            buscaPorData.forEach(e ->
+                    System.out.println("data de lançamento: " + e.getTitulo() + " data de lançamento: "+ e.getDataLancamento()));
+
+        }
     }
 
 
